@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  ### MySQL 5.7
+  # MySQL is a widely used, open-source relational database management system (RDBMS).
+  #
+  mysql:
+    image: mysql:5.7
+    container_name: projectgmysql
+    hostname: projectgmysql
+    restart: always
+    ports:
+      - 11111:3306
+    environment:
+      TZ: Asia/Seoul
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: dev
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: dev
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
