@@ -1,26 +1,45 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from '../user/entities/user.entity';
 import { CreateFolderDto } from './dto/create-folder.dto';
-import { UpdateFolderDto } from './dto/update-folder.dto';
+import { Folder } from './entities/folder.entity';
 
 @Injectable()
 export class FolderService {
-  create(createFolderDto: CreateFolderDto) {
-    return 'This action adds a new folder';
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+
+    @InjectRepository(Folder)
+    private readonly folderRepository: Repository<Folder>,
+  ) {}
+
+  async create(userId: number, folder: CreateFolderDto) {
+    const user = await this.userRepository.findOne(userId);
+    if (!user) {
+      throw new NotFoundException({
+        message: '해당 유저를 찾을 수 없습니다.',
+      });
+    }
+
+    const newFolder = this.folderRepository.create(folder);
+    newFolder.user = user;
+
+    return this.folderRepository.save(newFolder);
   }
 
-  findAll() {
-    return `This action returns all folder`;
-  }
+  async findAll(userId: number) {
+    const user = await this.userRepository.findOne(userId);
+    if (!user) {
+      throw new NotFoundException({
+        message: '해당 유저를 찾을 수 없습니다.',
+      });
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} folder`;
-  }
-
-  update(id: number, updateFolderDto: UpdateFolderDto) {
-    return `This action updates a #${id} folder`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} folder`;
+    return this.folderRepository.find({
+      where: { user },
+      order: { createdAt: 'ASC' },
+    });
   }
 }

@@ -1,44 +1,29 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Post, Body, Param, Get } from '@nestjs/common';
 import { FolderService } from './folder.service';
 import { CreateFolderDto } from './dto/create-folder.dto';
-import { UpdateFolderDto } from './dto/update-folder.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('feature/folder')
-@Controller('folders')
+@Controller('users')
 export class FolderController {
   constructor(private readonly folderService: FolderService) {}
 
-  @Post()
-  create(@Body() createFolderDto: CreateFolderDto) {
-    return this.folderService.create(createFolderDto);
+  @Post(':userId/folders')
+  @ApiOperation({
+    summary: `사용자의 폴더 생성`,
+  })
+  create(
+    @Param('userId') userId: string,
+    @Body() createFolderDto: CreateFolderDto,
+  ) {
+    return this.folderService.create(+userId, createFolderDto);
   }
 
-  @Get()
-  findAll() {
-    return this.folderService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.folderService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFolderDto: UpdateFolderDto) {
-    return this.folderService.update(+id, updateFolderDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.folderService.remove(+id);
+  @Get(':userId/folders')
+  @ApiOperation({
+    summary: `사용자의 폴더 반환`,
+  })
+  findAll(@Param('userId') userId: string) {
+    return this.folderService.findAll(+userId);
   }
 }
