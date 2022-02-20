@@ -1,0 +1,18 @@
+{
+  "type": "mysql",
+  "host": "localhost",
+  "port": 11111,
+  "username": "dev",
+  "password": "dev",
+  "database": "dev",
+  "charset": "utf8mb4_unicode_ci",
+  "timezone": "+09:00",
+  "synchronize": false,
+  "entities": ["src/**/*.entity.ts"],
+  "migrationsTableName": "migration",
+  "migrations": ["migration/*.ts"],
+  "cli": {
+    "migrationsDir": "migration"
+  },
+  "logging": true
+}
