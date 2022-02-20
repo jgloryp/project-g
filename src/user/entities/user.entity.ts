@@ -7,6 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Folder } from '../../folder/entities/folder.entity';
+import { Photo } from '../../photo/entities/photo.entity';
 
 @Entity()
 export class User {
@@ -24,4 +25,7 @@ export class User {
 
   @OneToMany(() => Folder, (folder) => folder.user)
   folders: Folder[];
+
+  @OneToMany(() => Photo, (photo) => photo.user)
+  photos: Photo[];
 }

@@ -5,7 +5,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
+import { Photo } from '../../photo/entities/photo.entity';
 import { User } from '../../user/entities/user.entity';
 
 @Entity()
@@ -24,4 +26,7 @@ export class Folder {
 
   @ManyToOne(() => User, (user) => user.folders)
   user: User;
+
+  @OneToMany(() => Photo, (photo) => photo.folder)
+  photos: Folder[];
 }
