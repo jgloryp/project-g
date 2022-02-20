@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Folder } from '../../folder/entities/folder.entity';
 import { Photo } from '../../photo/entities/photo.entity';
+import { Point } from '../../point/entities/point.entity';
 
 @Entity()
 export class User {
@@ -28,4 +29,7 @@ export class User {
 
   @OneToMany(() => Photo, (photo) => photo.user)
   photos: Photo[];
+
+  @OneToMany(() => Point, (point) => point.user)
+  points: Point[];
 }
