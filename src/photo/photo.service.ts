@@ -1,26 +1,46 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Folder } from '../folder/entities/folder.entity';
+import { User } from '../user/entities/user.entity';
 import { CreatePhotoDto } from './dto/create-photo.dto';
-import { UpdatePhotoDto } from './dto/update-photo.dto';
+import { Photo } from './entities/photo.entity';
 
 @Injectable()
 export class PhotoService {
-  create(createPhotoDto: CreatePhotoDto) {
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+
+    @InjectRepository(Folder)
+    private readonly folderRepository: Repository<Folder>,
+
+    @InjectRepository(Photo)
+    private readonly photoRepository: Repository<Photo>,
+  ) {}
+
+  async create(userId: string, folderId: string, photos: CreatePhotoDto[]) {
+    const user = await this.userRepository.findOne(userId);
+    if (!user) {
+      throw new NotFoundException('해당 유저를 찾을 수 없습니다.');
+    }
+
+    const folder = await this.folderRepository.findOne(folderId);
+    if (!user) {
+      throw new NotFoundException('해당 폴더를 찾을 수 없습니다.');
+    }
+
+    for (const photo of photos) {
+      const newPhoto = new Photo();
+
+      newPhoto.name = photo.name;
+      newPhoto.url = photo.url;
+      newPhoto.user = user;
+      newPhoto.folder = folder;
+
+      await this.photoRepository.save(newPhoto);
+    }
+
     return 'This action adds a new photo';
-  }
-
-  findAll() {
-    return `This action returns all photo`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} photo`;
-  }
-
-  update(id: number, updatePhotoDto: UpdatePhotoDto) {
-    return `This action updates a #${id} photo`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} photo`;
   }
 }

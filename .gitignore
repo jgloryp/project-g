@@ -33,3 +33,6 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# 개발 로컬에 저장되는 임시 사진 파일은 무시
+/upload

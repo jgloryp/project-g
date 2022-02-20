@@ -6,37 +6,62 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  UploadedFiles,
+  BadRequestException,
 } from '@nestjs/common';
 import { PhotoService } from './photo.service';
-import { CreatePhotoDto } from './dto/create-photo.dto';
 import { UpdatePhotoDto } from './dto/update-photo.dto';
+import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { CreatePhotoDto } from './dto/create-photo.dto';
 
-@Controller('photo')
+@ApiTags('feature/photos')
+@Controller('users')
 export class PhotoController {
   constructor(private readonly photoService: PhotoService) {}
 
-  @Post()
-  create(@Body() createPhotoDto: CreatePhotoDto) {
-    return this.photoService.create(createPhotoDto);
-  }
+  @Post(':userId/folders/:folderId/photos')
+  @ApiOperation({
+    summary: `사용자의 폴더에 사진을 업로드 `,
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        files: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+      },
+    },
+  })
+  @UseInterceptors(FilesInterceptor('files'))
+  create(
+    @Param('userId') userId: string,
+    @Param('folderId') folderId: string,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ) {
+    // console.log(files);
 
-  @Get()
-  findAll() {
-    return this.photoService.findAll();
-  }
+    if (files.length === 0) {
+      throw new BadRequestException('사진 파일이 첨부 되지 않았습니다');
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.photoService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePhotoDto: UpdatePhotoDto) {
-    return this.photoService.update(+id, updatePhotoDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.photoService.remove(+id);
+    return this.photoService.create(
+      userId,
+      folderId,
+      files.map(
+        (file) =>
+          new CreatePhotoDto(
+            file.originalname,
+            `https://fakepath/${file.filename}`,
+          ),
+      ),
+    );
   }
 }
