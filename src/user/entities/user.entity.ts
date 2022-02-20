@@ -4,7 +4,9 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { Folder } from '../../folder/entities/folder.entity';
 
 @Entity()
 export class User {
@@ -19,4 +21,7 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date; // 수정일시
+
+  @OneToMany(() => Folder, (folder) => folder.user)
+  folders: Folder[];
 }
