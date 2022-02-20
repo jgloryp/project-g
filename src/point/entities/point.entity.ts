@@ -5,7 +5,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  OneToOne,
 } from 'typeorm';
+import { Folder } from '../../folder/entities/folder.entity';
+import { Photo } from '../../photo/entities/photo.entity';
 import { User } from '../../user/entities/user.entity';
 
 export enum PointType {
@@ -34,5 +37,11 @@ export class Point {
   updatedAt: Date; // 수정일시
 
   @ManyToOne(() => User, (user) => user.points)
-  user: User;
+  user: User; // 포인트의 소유자
+
+  @OneToOne(() => Folder, (folder) => folder.point, { nullable: true })
+  folder: Folder; // 폴더 생성으로 포인트 적립이 될 경우 외래키를 저장한다. 아니면 null
+
+  @OneToOne(() => Photo, (photo) => photo.point, { nullable: true })
+  photo: Photo; // 사진 업로드로 포인트 사용이 될 경우 외래키를 저장한다. 아니면 null
 }

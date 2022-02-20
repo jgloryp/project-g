@@ -6,8 +6,10 @@ import {
   UpdateDateColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
 } from 'typeorm';
 import { Photo } from '../../photo/entities/photo.entity';
+import { Point } from '../../point/entities/point.entity';
 import { User } from '../../user/entities/user.entity';
 
 @Entity()
@@ -29,6 +31,9 @@ export class Folder {
 
   @OneToMany(() => Photo, (photo) => photo.folder)
   photos: Folder[];
+
+  @OneToOne(() => Point, (point) => point.folder)
+  point: Point;
 
   countPhotos: number; // 사진 갯수를 담기 위한 가상 필드
 }

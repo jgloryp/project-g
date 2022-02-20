@@ -4,10 +4,12 @@ import {
   Entity,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Folder } from '../../folder/entities/folder.entity';
+import { Point } from '../../point/entities/point.entity';
 import { User } from '../../user/entities/user.entity';
 import { Tag } from './tag.entity';
 
@@ -36,4 +38,7 @@ export class Photo {
 
   @OneToMany(() => Tag, (tag) => tag.photo)
   tags: Tag;
+
+  @OneToOne(() => Point, (point) => point.photo, { nullable: true })
+  point: Point;
 }
