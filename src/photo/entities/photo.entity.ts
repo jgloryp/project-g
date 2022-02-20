@@ -3,11 +3,13 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Folder } from '../../folder/entities/folder.entity';
 import { User } from '../../user/entities/user.entity';
+import { Tag } from './tag.entity';
 
 @Entity()
 export class Photo {
@@ -31,4 +33,7 @@ export class Photo {
 
   @ManyToOne(() => User, (user) => user.photos)
   user: User;
+
+  @OneToMany(() => Tag, (tag) => tag.photo)
+  tags: Tag;
 }
