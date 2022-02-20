@@ -7,6 +7,7 @@ import { TypeOrmConfigService } from './typeorm-config.service';
 import { UserModule } from './user/user.module';
 import { PhotoModule } from './photo/photo.module';
 import { FolderModule } from './folder/folder.module';
+import { StatisticModule } from './statistic/statistic.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { FolderModule } from './folder/folder.module';
     UserModule,
     FolderModule,
     PhotoModule,
+    StatisticModule,
   ],
   controllers: [AppController],
   providers: [AppService],
