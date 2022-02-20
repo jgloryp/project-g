@@ -5,11 +5,13 @@ import {
   UseInterceptors,
   UploadedFiles,
   BadRequestException,
+  Get,
 } from '@nestjs/common';
 import { PhotoService } from './photo.service';
 import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { CreatePhotoDto } from './dto/create-photo.dto';
+import { ListPhotoItem } from './dto/list-photo.dto';
 
 @ApiTags('feature/photos')
 @Controller('users')
@@ -48,8 +50,8 @@ export class PhotoController {
     }
 
     return this.photoService.create(
-      userId,
-      folderId,
+      +userId,
+      +folderId,
       files.map(
         (file) =>
           new CreatePhotoDto(
@@ -57,6 +59,21 @@ export class PhotoController {
             `https://fakepath/${file.filename}`,
           ),
       ),
+    );
+  }
+
+  @Get(':userId/folders/:folderId/photos')
+  @ApiOperation({
+    summary: `사용자의 폴더에 있는 사진 목록을 최근 저장 순으로 반환`,
+  })
+  async findAll(
+    @Param('userId') userId: string,
+    @Param('folderId') folderId: string,
+  ) {
+    const photos = await this.photoService.findAll(+userId, +folderId);
+
+    return photos.map(
+      (photo) => new ListPhotoItem(photo.name, photo.url, photo.createdAt),
     );
   }
 }

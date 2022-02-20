@@ -19,14 +19,14 @@ export class PhotoService {
     private readonly photoRepository: Repository<Photo>,
   ) {}
 
-  async create(userId: string, folderId: string, photos: CreatePhotoDto[]) {
+  async create(userId: number, folderId: number, photos: CreatePhotoDto[]) {
     const user = await this.userRepository.findOne(userId);
     if (!user) {
       throw new NotFoundException('해당 유저를 찾을 수 없습니다.');
     }
 
     const folder = await this.folderRepository.findOne(folderId);
-    if (!user) {
+    if (!folder) {
       throw new NotFoundException('해당 폴더를 찾을 수 없습니다.');
     }
 
@@ -42,5 +42,22 @@ export class PhotoService {
     }
 
     return 'This action adds a new photo';
+  }
+
+  async findAll(userId: number, folderId: number) {
+    const user = await this.userRepository.findOne(userId);
+    if (!user) {
+      throw new NotFoundException('해당 유저를 찾을 수 없습니다.');
+    }
+
+    const folder = await this.folderRepository.findOne(folderId);
+    if (!folder) {
+      throw new NotFoundException('해당 폴더를 찾을 수 없습니다.');
+    }
+
+    return this.photoRepository.find({
+      where: { user, folder },
+      order: { createdAt: 'DESC' },
+    });
   }
 }
