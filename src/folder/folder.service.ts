@@ -18,9 +18,7 @@ export class FolderService {
   async create(userId: number, folder: CreateFolderDto) {
     const user = await this.userRepository.findOne(userId);
     if (!user) {
-      throw new NotFoundException({
-        message: '해당 유저를 찾을 수 없습니다.',
-      });
+      throw new NotFoundException('해당 유저를 찾을 수 없습니다.');
     }
 
     const newFolder = this.folderRepository.create(folder);
@@ -32,14 +30,14 @@ export class FolderService {
   async findAll(userId: number) {
     const user = await this.userRepository.findOne(userId);
     if (!user) {
-      throw new NotFoundException({
-        message: '해당 유저를 찾을 수 없습니다.',
-      });
+      throw new NotFoundException('해당 유저를 찾을 수 없습니다.');
     }
 
-    return this.folderRepository.find({
-      where: { user },
-      order: { createdAt: 'ASC' },
-    });
+    return this.folderRepository
+      .createQueryBuilder('folder')
+      .loadRelationCountAndMap('folder.countPhotos', 'folder.photos')
+      .where('folder.userId = :userId', { userId })
+      .orderBy('folder.createdAt', 'ASC')
+      .getMany();
   }
 }

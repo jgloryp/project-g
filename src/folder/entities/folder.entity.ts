@@ -29,4 +29,6 @@ export class Folder {
 
   @OneToMany(() => Photo, (photo) => photo.folder)
   photos: Folder[];
+
+  countPhotos: number; // 사진 갯수를 담기 위한 가상 필드
 }
