@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { PhotoModule } from './photo/photo.module';
 import { FolderModule } from './folder/folder.module';
 import { StatisticModule } from './statistic/statistic.module';
+import { PointModule } from './point/point.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { StatisticModule } from './statistic/statistic.module';
     FolderModule,
     PhotoModule,
     StatisticModule,
+    PointModule,
   ],
   controllers: [AppController],
   providers: [AppService],
