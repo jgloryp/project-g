@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './typeorm-config.service';
 import { UserModule } from './user/user.module';
+import { PhotoModule } from './photo/photo.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { UserModule } from './user/user.module';
       useClass: TypeOrmConfigService,
     }),
     UserModule,
+    PhotoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
