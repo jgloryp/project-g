@@ -1,17 +1,12 @@
 import {
   Controller,
-  Get,
   Post,
-  Body,
-  Patch,
   Param,
-  Delete,
   UseInterceptors,
   UploadedFiles,
   BadRequestException,
 } from '@nestjs/common';
 import { PhotoService } from './photo.service';
-import { UpdatePhotoDto } from './dto/update-photo.dto';
 import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { CreatePhotoDto } from './dto/create-photo.dto';
