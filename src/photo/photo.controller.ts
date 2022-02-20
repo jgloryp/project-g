@@ -6,12 +6,15 @@ import {
   UploadedFiles,
   BadRequestException,
   Get,
+  Body,
+  ParseArrayPipe,
 } from '@nestjs/common';
 import { PhotoService } from './photo.service';
 import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { CreatePhotoDto } from './dto/create-photo.dto';
 import { ListPhotoItem } from './dto/list-photo.dto';
+import { CreateTagDto } from './dto/create-tag.dto';
 
 @ApiTags('feature/photos')
 @Controller('users')
@@ -34,6 +37,12 @@ export class PhotoController {
             format: 'binary',
           },
         },
+        tags: {
+          type: 'array',
+          items: {
+            type: 'string',
+          },
+        },
       },
     },
   })
@@ -42,8 +51,11 @@ export class PhotoController {
     @Param('userId') userId: string,
     @Param('folderId') folderId: string,
     @UploadedFiles() files: Array<Express.Multer.File>,
+    @Body('tags', ParseArrayPipe) tags: Array<string>,
   ) {
-    // console.log(files);
+    console.log(files);
+
+    console.log(tags);
 
     if (files.length === 0) {
       throw new BadRequestException('사진 파일이 첨부 되지 않았습니다');
@@ -59,6 +71,7 @@ export class PhotoController {
             `https://fakepath/${file.filename}`,
           ),
       ),
+      tags.map((tag) => new CreateTagDto(tag)),
     );
   }
 
