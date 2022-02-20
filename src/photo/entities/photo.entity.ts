@@ -40,5 +40,5 @@ export class Photo {
   tags: Tag;
 
   @OneToOne(() => Point, (point) => point.photo, { nullable: true })
-  point: Point;
+  point: Point; // 사진 정보와 연관되어 있는 포인트 정보
 }
