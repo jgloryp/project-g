@@ -52,10 +52,6 @@ export class PhotoController {
     @UploadedFiles() files: Array<Express.Multer.File>,
     @Body('tags') tags: string,
   ) {
-    console.log(files);
-    console.log(tags);
-    console.log(tags.split(','));
-
     if (files.length === 0) {
       throw new BadRequestException('사진 파일이 첨부 되지 않았습니다');
     }
