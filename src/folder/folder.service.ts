@@ -54,7 +54,7 @@ export class FolderService {
       amount: 1000,
       description: `${newFolder.name} 폴더 생성`,
       user: user,
-      folder: folder,
+      folder: newFolder,
     });
     await manager.save(Point, newPoint);
 
@@ -63,6 +63,10 @@ export class FolderService {
       amount: 1000,
       point: newPoint,
     });
+    await manager.save(PointLog, newPointLog);
+
+    // 최초 생성(=적립의 경우)된 포인트 상세 이력은 parent 를 자기 자신으로 지정한다
+    newPointLog.parent = newPointLog;
     await manager.save(PointLog, newPointLog);
 
     return 'This action adds a new folder';
