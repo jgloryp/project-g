@@ -10,6 +10,7 @@ import {
   Transaction,
   TransactionManager,
 } from 'typeorm';
+import { PointLog } from '../point/entities/point-log.entity';
 import { Point, PointType } from '../point/entities/point.entity';
 import { User } from '../user/entities/user.entity';
 import { CreateFolderDto } from './dto/create-folder.dto';
@@ -56,6 +57,13 @@ export class FolderService {
       folder: folder,
     });
     await manager.save(Point, newPoint);
+
+    // 포인트 1000점 생성의 이력을 포인트 상세 이력에 생성한다
+    const newPointLog = manager.create(PointLog, {
+      amount: 1000,
+      point: newPoint,
+    });
+    await manager.save(PointLog, newPointLog);
 
     return 'This action adds a new folder';
   }

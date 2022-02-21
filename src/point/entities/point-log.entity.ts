@@ -17,9 +17,6 @@ export class PointLog {
   @Column()
   amount: number; // 적립되거나 사용된 포인트
 
-  @Column()
-  description: string; // 적립되거나 사용된 경우의 원인 설명
-
   @CreateDateColumn()
   createdAt: Date; // 생성일시
 
