@@ -1,38 +1,72 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# 1. Description
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+사용자, 사진을 담을 폴더, 사진, 사진의 태그, 포인트 선입/선출 및 기타 통계 등
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# 2. Installation
 
-## Description
+이 프로젝트를 클론한 후에 프로젝트 디렉토리에서 아래 중 설치가 안되어 있는 것은 설치가 필요합니다.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 2.1 node.js
 
-## Installation
+node.js 버전은 크게 상관 없을 것 같습니다.
 
-```bash
-$ npm install
+```
+$ node --version
+v12.14.0
 ```
 
-## Running the app
+## 2.2 docker
+
+> docker-compose 명령 활용을 위해 설치
+> https://docs.docker.com/desktop/mac/install (맥용)
+> https://docs.docker.com/desktop/windows/install (윈도우용)
+
+## 2.3 docker-compose 실행
+
+```
+$ docker-compose up -d --build
+```
+
+docker-compose 는 개발환경을 위한 MySQL 5.7 을 다음 환경정보로 실행합니다.
+
+> host: localhost  
+> port: 11111  
+> user: dev  
+> pass: dev  
+> database: dev
+
+## 2.4 nest.js 설치
+
+```
+$ npm i -g @nestjs/cli
+```
+
+## 2.5 의존성 라이브러리 설치
+
+package.json 정보를 토대로 의존성 라이브러리 설치
+
+```
+$ npm i
+```
+
+## 2.6 데이터베이스 마이그레이션
+
+전체적으로 데이터베이스 모든 테이블을 생성합니다.
+사용자 두명은 미리 시딩을 해 놓았습니다.
+
+```
+$ npm run typeorm migration:run
+```
+
+# 3. Running the app
+
+## 3.1 빌드
+
+```
+$ npm run build
+```
+
+## 3.2 실행
 
 ```bash
 # development
@@ -45,29 +79,14 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Test
+## 3.3 API
 
-```bash
-# unit tests
-$ npm run test
+엔드포인트들의 테스트를 겸할 수 있도록 swagger 를 사용하였습니다.
+아무 브라우져를 통해서 다음 URL을 연결합니다.
 
-# e2e tests
-$ npm run test:e2e
+http://localhost:11110/docs
 
-# test coverage
-$ npm run test:cov
-```
+# 4. ERD
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+![Alt text](erd.png 'ERD')
+개괄적인 모델링 내용입니다. 식별관계에 대해서는 따로 정의하지는 않았습니다.

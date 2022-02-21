@@ -6,7 +6,6 @@ import {
   UpdateDateColumn,
   ManyToOne,
   OneToMany,
-  OneToOne,
 } from 'typeorm';
 import { Photo } from '../../photo/entities/photo.entity';
 import { Point } from '../../point/entities/point.entity';
