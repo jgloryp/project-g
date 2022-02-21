@@ -12,6 +12,7 @@ import {
   TransactionManager,
 } from 'typeorm';
 import { Folder } from '../folder/entities/folder.entity';
+import { PointLog } from '../point/entities/point-log.entity';
 import { Point, PointType } from '../point/entities/point.entity';
 import { User } from '../user/entities/user.entity';
 import { CreatePhotoDto } from './dto/create-photo.dto';
@@ -67,7 +68,7 @@ export class PhotoService {
     // 현재 포인트 합계를 가져온다
     const { currentPoint } = await manager
       .createQueryBuilder(Point, 'point')
-      .select('SUM(point.point)', 'currentPoint')
+      .select('SUM(point.amount)', 'currentPoint')
       .where('point.userId = :userId', { userId })
       .getRawOne();
 
@@ -101,7 +102,45 @@ export class PhotoService {
       newPoint.photo = newPhoto;
       await manager.save(Point, newPoint);
 
-      // n개의 태그가 입력 되었다면 n개의 사진에 동일한 n개의 태그 생성한다
+      // 현재 사용이 가능한 포인트 잔여 수량을 가져온다 (x 번째 적립분 부터 순서대로)
+      const pointLogParents = await manager
+        .createQueryBuilder(PointLog, 'point_log')
+        .leftJoin('point_log.point', 'point')
+        .select('point.userId', 'userId')
+        .addSelect('point_log.parentId', 'parentId')
+        .addSelect('SUM(point_log.amount)', 'leftAmount')
+        .addSelect('MIN(point_log.createdAt)', 'oldestCreateAt')
+        .where('point.userId = :userId', { userId })
+        .groupBy('point_log.parentId')
+        .having('leftAmount > 0')
+        .orderBy('oldestCreateAt', 'ASC')
+        .getRawMany();
+
+      // 포인트 상세 이력 정보를 저장한다
+      let usedAmount = newPoint.amount;
+      for (const pointLogParent of pointLogParents) {
+        usedAmount += parseInt(pointLogParent.leftAmount);
+
+        const newPointLog = new PointLog();
+        newPointLog.point = newPoint;
+        newPointLog.parent = await manager.findOne(
+          PointLog,
+          pointLogParent.parentId,
+        );
+
+        // 0 또는 양수일 경우는 n 번째 적립한 포인트 내에서 차감이 가능한 경우이고
+        if (usedAmount >= 0) {
+          newPointLog.amount = newPoint.amount;
+          await manager.save(PointLog, newPointLog);
+          break;
+        }
+
+        // 그 외 음수일 경우는 n 번째 적립한 포인트를 모두 사용한 것으로 저장한다
+        newPointLog.amount = newPoint.amount - usedAmount;
+        await manager.save(PointLog, newPointLog);
+      }
+
+      // p개의 태그가 입력 되었다면 t개의 사진에 동일한 p개의 태그 정보를 생성한다
       for (const tag of tags) {
         const newTag = new Tag();
         newTag.name = tag.name;
