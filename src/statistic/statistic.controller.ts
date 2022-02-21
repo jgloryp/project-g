@@ -19,4 +19,26 @@ export class StatisticController {
       (result) => new TopTagcDto(result.tag, result.countTags),
     );
   }
+
+  @Get('folders/points/used')
+  @ApiOperation({
+    summary: `전체 폴더 중에 획득한 포인트에서 소모가 있는 폴더 목록을 추출`,
+  })
+  async usedFolders() {
+    const results = await this.statisticService.usedFolderPoint();
+
+    console.log(results);
+    return results;
+  }
+
+  @Get('folders/points/unused')
+  @ApiOperation({
+    summary: `전체 폴더 중에 획득한 포인트에서 소모가 없는 폴더 목록을 추출`,
+  })
+  async unusedFolders() {
+    const results = await this.statisticService.unusedFolderPoint();
+
+    console.log(results);
+    return results;
+  }
 }
