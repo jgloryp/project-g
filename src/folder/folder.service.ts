@@ -18,6 +18,9 @@ import { Folder } from './entities/folder.entity';
 
 @Injectable()
 export class FolderService {
+  // 폴더 생성으로 지급될 포인트 수량
+  private static readonly FOLDER_POINT = 1000;
+
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -48,19 +51,19 @@ export class FolderService {
     newFolder.user = user;
     await manager.save(Folder, newFolder);
 
-    // 폴더 생성에 따른 포인트 1000점을 생성한다
+    // 폴더 생성으로 지급될 포인트를 생성한다
     const newPoint = manager.create(Point, {
       type: PointType.Earned,
-      amount: 1000,
+      amount: FolderService.FOLDER_POINT,
       description: `${newFolder.name} 폴더 생성`,
       user: user,
       folder: newFolder,
     });
     await manager.save(Point, newPoint);
 
-    // 포인트 1000점 생성의 이력을 포인트 상세 이력에 생성한다
+    // 폴더 생성으로 지급될 포인트를 포인트 상세 이력에 생성한다
     const newPointLog = manager.create(PointLog, {
-      amount: 1000,
+      amount: FolderService.FOLDER_POINT,
       point: newPoint,
     });
     await manager.save(PointLog, newPointLog);

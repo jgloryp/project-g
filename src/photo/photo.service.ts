@@ -22,6 +22,9 @@ import { Tag } from './entities/tag.entity';
 
 @Injectable()
 export class PhotoService {
+  // 사진 업로드로 차감될 포인트 수량
+  private static readonly PHOTO_POINT = -100;
+
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -73,7 +76,7 @@ export class PhotoService {
       .getRawOne();
 
     // 사진을 업로드 하는데 100포인트가 필요하며, 사진 갯수에 따라 포인트 필요량을 계산한다
-    const requiredPoint = photos.length * 100;
+    const requiredPoint = photos.length * -PhotoService.PHOTO_POINT;
 
     // 포인트가 충분히 있으면 다음 업로드 로직으로 넘어간다
     if (+currentPoint < requiredPoint) {
@@ -95,7 +98,7 @@ export class PhotoService {
       // 포인트 100점 사용을 저장한다 (포인트 사용의 경우는 음수로 표현)
       const newPoint = new Point();
       newPoint.type = PointType.Used;
-      newPoint.amount = -100;
+      newPoint.amount = PhotoService.PHOTO_POINT;
       newPoint.description = `${newPhoto.name} 사진 업로드`;
       newPoint.user = user;
       newPoint.folder = folder;
