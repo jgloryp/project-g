@@ -50,7 +50,7 @@ export class FolderService {
     // 폴더 생성에 따른 포인트 1000점을 생성한다
     const newPoint = manager.create(Point, {
       type: PointType.Earned,
-      point: 1000,
+      amount: 1000,
       description: `${newFolder.name} 폴더 생성`,
       user: user,
       folder: folder,

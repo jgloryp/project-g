@@ -3,9 +3,10 @@ import { PointService } from './point.service';
 import { PointController } from './point.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Point } from './entities/point.entity';
+import { PointLog } from './entities/point-log.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Point])],
+  imports: [TypeOrmModule.forFeature([Point, PointLog])],
   controllers: [PointController],
   providers: [PointService],
   exports: [TypeOrmModule],

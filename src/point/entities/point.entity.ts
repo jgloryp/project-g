@@ -5,12 +5,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
-  OneToOne,
-  JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { Folder } from '../../folder/entities/folder.entity';
 import { Photo } from '../../photo/entities/photo.entity';
 import { User } from '../../user/entities/user.entity';
+import { PointLog } from './point-log.entity';
 
 export enum PointType {
   Earned = 'earned',
@@ -26,7 +26,7 @@ export class Point {
   type: PointType;
 
   @Column()
-  point: number; // 적립되거나 사용된 포인트
+  amount: number; // 적립되거나 사용된 포인트
 
   @Column()
   description: string; // 적립되거나 사용된 경우의 원인 설명
@@ -45,4 +45,7 @@ export class Point {
 
   @ManyToOne(() => Photo, (photo) => photo.point, { nullable: true })
   photo: Photo; // 사진 업로드로 포인트 변경이 될 경우 외래키를 저장한다. 아니면 null
+
+  @OneToMany(() => PointLog, (pointLog) => pointLog.point)
+  pointLogs: PointLog[]; // 포인트에 대한 세부적인 포인트 이력을 저장한다
 }

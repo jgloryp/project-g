@@ -94,7 +94,7 @@ export class PhotoService {
       // 포인트 100점 사용을 저장한다 (포인트 사용의 경우는 음수로 표현)
       const newPoint = new Point();
       newPoint.type = PointType.Used;
-      newPoint.point = -100;
+      newPoint.amount = -100;
       newPoint.description = `${newPhoto.name} 사진 업로드`;
       newPoint.user = user;
       newPoint.folder = folder;
