@@ -27,7 +27,7 @@ export class PointLog {
   point: Point; // 원본 포인트 정보
 
   @ManyToOne(() => PointLog, (pointLog) => pointLog.children)
-  parent: Point; // 포인트 상세 이력은 최초 생성된 포인트 상세 이력과 관련이 있다
+  parent: PointLog; // 포인트 상세 이력은 최초 생성된 포인트 상세 이력과 관련이 있다
   @OneToMany(() => PointLog, (pointLog) => pointLog.parent)
-  children: Point[]; // https://typeorm.io/#/tree-entities/adjacency-list 참고
+  children: PointLog[]; // https://typeorm.io/#/tree-entities/adjacency-list 참고
 }
