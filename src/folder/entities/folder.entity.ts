@@ -32,7 +32,7 @@ export class Folder {
   @OneToMany(() => Photo, (photo) => photo.folder)
   photos: Folder[];
 
-  @OneToOne(() => Point, (point) => point.folder)
+  @OneToMany(() => Point, (point) => point.folder)
   point: Point; // 폴더 정보와 연관되어 있는 포인트 정보
 
   countPhotos: number; // 사진 갯수를 담기 위한 가상 필드

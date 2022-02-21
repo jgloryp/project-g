@@ -40,11 +40,9 @@ export class Point {
   @ManyToOne(() => User, (user) => user.points, { nullable: false })
   user: User; // 포인트의 소유자
 
-  @OneToOne(() => Folder, (folder) => folder.point, { nullable: true })
-  @JoinColumn()
-  folder: Folder; // 폴더 생성으로 포인트 적립이 될 경우 외래키를 저장한다. 아니면 null
+  @ManyToOne(() => Folder, (folder) => folder.point, { nullable: true })
+  folder: Folder; // 폴더 생성으로 포인트 변경이 될 경우 외래키를 저장한다. 아니면 null
 
-  @OneToOne(() => Photo, (photo) => photo.point, { nullable: true })
-  @JoinColumn()
-  photo: Photo; // 사진 업로드로 포인트 사용이 될 경우 외래키를 저장한다. 아니면 null
+  @ManyToOne(() => Photo, (photo) => photo.point, { nullable: true })
+  photo: Photo; // 사진 업로드로 포인트 변경이 될 경우 외래키를 저장한다. 아니면 null
 }
