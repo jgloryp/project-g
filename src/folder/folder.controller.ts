@@ -11,7 +11,7 @@ export class FolderController {
 
   @Post(':userId/folders')
   @ApiOperation({
-    summary: `사용자의 폴더 생성`,
+    summary: `사용자의 폴더 생성 (폴더 생성에 따른 포인트 1000점을 생성한다)`,
   })
   create(
     @Param('userId') userId: string,
